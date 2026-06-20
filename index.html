@@ -867,7 +867,7 @@ function submitForm() {
   if(!phone || !/^[\+\d\s\-\(\)]{7,20}$/.test(phone))      { show('e-phone',   true);  valid = false; } else { show('e-phone',   false); }
   if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))   { show('e-email',   true);  valid = false; } else { show('e-email',   false); }
   if(!subject)                                              { show('e-subject', true);  valid = false; } else { show('e-subject', false); }
-
+  if(!message || message.length < 0)                       { show('e-message', true); valid = false; } else { show('e-message', false); }
   if(!valid) return;
 
   // Disable button while sending
@@ -880,6 +880,7 @@ function submitForm() {
     phone       : phone,
     from_email  : email || 'Not provided',
     subject     : subject,
+    message : message,
     reply_to    : email || 'noreply@rudracapital.in',
   };
 
