@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rudra Capital</title>
+<!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+  // ── EMAILJS CONFIG ──────────────────────────────────────────────
+  // Replace the three values below after setting up EmailJS
+  const EMAILJS_PUBLIC_KEY   = "YOUR_PUBLIC_KEY";   // Account → API Keys
+  const EMAILJS_SERVICE_ID   = "YOUR_SERVICE_ID";   // Email Services tab
+  const EMAILJS_TEMPLATE_ID  = "YOUR_TEMPLATE_ID";  // Email Templates tab
+  // ────────────────────────────────────────────────────────────────
+  (function(){ emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ===== RESET & TOKENS ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1C2B3A;--navy-deep:#111D28;--navy-mid:#243347;
+  --gold:#C9A84C;--gold-light:#E2C97A;--gold-pale:#F5EDD4;
+  --cream:#F7F4EE;--cream-dark:#EDE8DE;--charcoal:#2E3D4F;
+  --slate:#4A5D6E;--muted:#7A8F9F;--white:#FFFFFF;--red:#C0392B;
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --max-width:1180px;--section-py:96px;
+  --transition:0.3s cubic-bezier(0.4,0,0.2,1);
+  --radius:4px;--radius-lg:8px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08);
+  --shadow:0 4px 20px rgba(0,0,0,.12);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.18);
+}
+html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);color:var(--charcoal);background:var(--white);line-height:1.6;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+ul{list-style:none}
+h1,h2,h3,h4,h5{font-family:var(--font-display);font-weight:600;line-height:1.2;color:var(--navy)}
+.container{max-width:var(--max-width);margin:0 auto;padding:0 24px}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--cream)}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+
+/* ===== UTILITY ===== */
+.gold-line{width:48px;height:2px;background:var(--gold);display:block;margin-bottom:20px}
+.section-label{font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:block}
+.section-header{max-width:600px;margin-bottom:60px}
+.section-title{font-family:var(--font-display);font-size:clamp(32px,4vw,48px);font-weight:600;color:var(--navy);margin-bottom:16px}
+.section-title--light{color:var(--white)}
+.section-desc{font-size:16px;color:var(--slate);line-height:1.7;max-width:520px}
+
+/* ===== BUTTONS ===== */
+.btn{display:inline-block;font-family:var(--font-body);font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:14px 32px;border-radius:var(--radius);transition:all var(--transition);text-decoration:none;cursor:pointer;border:none}
+.btn--primary{background:var(--gold);color:var(--navy)}
+.btn--primary:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,168,76,.3)}
+.btn--ghost{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.3)}
+.btn--ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn--gold{background:var(--gold);color:var(--navy);font-size:13px;padding:16px 40px}
+.btn--gold:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,.35)}
+
+/* ===== PAGE MANAGEMENT ===== */
+.page{display:none}
+.page--active{display:block}
+
+/* ===== NAVBAR ===== */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 0;transition:background var(--transition),padding var(--transition),box-shadow var(--transition);background:transparent}
+.navbar--scrolled{background:rgba(17,29,40,.97);backdrop-filter:blur(12px);padding:14px 0;box-shadow:0 1px 0 rgba(201,168,76,.15)}
+.navbar__inner{display:flex;align-items:center;justify-content:space-between}
+.navbar__logo{display:flex;flex-direction:column;text-decoration:none;line-height:1;cursor:pointer}
+.navbar__logo-text{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--white);letter-spacing:.5px}
+.navbar__logo-tag{font-family:var(--font-body);font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:2px}
+.navbar__logo{align-items:center;flex-direction:row;gap:10px}
+.navbar__logo-img{height:40px;width:40px;object-fit:contain;flex-shrink:0}
+.navbar__logo-text-group{display:flex;flex-direction:column;line-height:1}
+.navbar__nav{display:flex;align-items:center;gap:36px}
+.navbar__link{font-family:var(--font-body);font-size:13px;font-weight:500;letter-spacing:.5px;color:rgba(255,255,255,.8);text-decoration:none;transition:color var(--transition);position:relative;cursor:pointer;background:none;border:none;padding:0}
+.navbar__link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width var(--transition)}
+.navbar__link:hover{color:var(--white)}
+.navbar__link:hover::after,.navbar__link--active::after{width:100%}
+.navbar__link--active{color:var(--gold)}
+.navbar__cta{font-family:var(--font-body);font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:10px 24px;border:1px solid var(--gold);color:var(--gold);text-decoration:none;transition:all var(--transition);border-radius:var(--radius);cursor:pointer;background:none}
+.navbar__cta:hover{background:var(--gold);color:var(--navy)}
+.navbar__burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.navbar__burger span{display:block;width:24px;height:2px;background:var(--white);transition:all var(--transition);transform-origin:center}
+.navbar__burger--open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.navbar__burger--open span:nth-child(2){opacity:0}
+.navbar__burger--open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.navbar__mobile{display:none;flex-direction:column;background:var(--navy-deep);border-top:1px solid rgba(201,168,76,.2);max-height:0;overflow:hidden;transition:max-height .4s ease}
+.navbar__mobile--open{max-height:400px}
+.navbar__mobile-link{display:block;padding:16px 24px;font-size:14px;font-weight:500;color:rgba(255,255,255,.8);border-bottom:1px solid rgba(255,255,255,.06);transition:color var(--transition),background var(--transition);cursor:pointer;background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;font-family:var(--font-body)}
+.navbar__mobile-link:hover,.navbar__mobile-link--active{color:var(--gold);background:rgba(201,168,76,.05)}
+.navbar__mobile-cta{display:block;margin:16px 24px;padding:12px 24px;text-align:center;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border:1px solid var(--gold);color:var(--gold);border-radius:var(--radius);transition:all var(--transition);cursor:pointer;background:none;font-family:var(--font-body)}
+.navbar__mobile-cta:hover{background:var(--gold);color:var(--navy)}
+@media(max-width:860px){.navbar__nav{display:none}.navbar__burger{display:flex}.navbar__mobile{display:flex}}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:120px 0 80px;background:var(--navy-deep)}
+.hero__bg{position:absolute;inset:0;z-index:0}
+.hero__gradient{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(201,168,76,.06) 0%,transparent 70%),linear-gradient(135deg,#111D28 0%,#1C2B3A 50%,#111D28 100%)}
+.hero__grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+.hero__content{position:relative;z-index:1;display:flex;flex-direction:column;gap:60px}
+.hero__text{max-width:680px}
+.hero__heading{font-family:var(--font-display);font-size:clamp(44px,7vw,76px);font-weight:600;color:var(--white);line-height:1.1;margin-bottom:24px}
+.hero__heading-em{font-style:italic;color:var(--gold)}
+.hero__sub{font-size:17px;color:rgba(247,244,238,.72);line-height:1.7;max-width:540px;margin-bottom:40px}
+.hero__actions{display:flex;gap:16px;flex-wrap:wrap}
+.hero__scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:1}
+.hero__scroll-hint span{display:block;width:1px;height:48px;background:linear-gradient(to bottom,transparent,var(--gold));animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{opacity:.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+
+/* ===== SERVICES (HOME) ===== */
+.services-section{padding:var(--section-py) 0;background:var(--cream)}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.service-card{display:flex;flex-direction:column;padding:36px 32px;background:var(--white);border:1px solid rgba(0,0,0,.06);border-radius:var(--radius-lg);text-decoration:none;transition:all var(--transition);cursor:pointer;position:relative;overflow:hidden}
+.service-card::before{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform var(--transition)}
+.service-card:hover{box-shadow:var(--shadow);transform:translateY(-4px);border-color:rgba(201,168,76,.3)}
+.service-card:hover::before{transform:scaleX(1)}
+.service-card__icon{font-size:28px;margin-bottom:20px}
+.service-card__title{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--navy);margin-bottom:12px}
+.service-card__desc{font-size:14px;color:var(--slate);line-height:1.65;flex:1}
+.service-card__arrow{margin-top:24px;font-size:18px;color:var(--gold);transition:transform var(--transition)}
+.service-card:hover .service-card__arrow{transform:translateX(6px)}
+
+/* ===== WHY SECTION ===== */
+.why-section{padding:var(--section-py) 0;background:var(--navy)}
+.why-section__inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.why-section__body{font-size:16px;color:rgba(247,244,238,.72);line-height:1.8;margin-bottom:32px}
+.why-list{display:flex;flex-direction:column;gap:14px}
+.why-list__item{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:500;color:rgba(247,244,238,.85)}
+.why-list__mark{color:var(--gold);font-size:16px;flex-shrink:0}
+.why-visual{position:relative;height:380px;display:flex;flex-direction:column;gap:20px;justify-content:center}
+.why-visual__card{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);border-radius:var(--radius-lg);padding:24px 28px;transition:all var(--transition)}
+.why-visual__card:hover{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.4)}
+.why-visual__card--offset{margin-left:32px}
+.why-visual__card-label{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(201,168,76,.7);margin-bottom:6px}
+.why-visual__card-value{font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--white)}
+.why-visual__bg-text{position:absolute;right:-20px;bottom:0;font-family:var(--font-display);font-size:180px;font-weight:700;color:rgba(201,168,76,.04);pointer-events:none;line-height:1;user-select:none}
+
+/* ===== WHO WE SERVE ===== */
+.who-section{padding:var(--section-py) 0;background:var(--white)}
+.clients-row{display:flex;flex-wrap:wrap;gap:16px}
+.client-pill{display:flex;align-items:center;gap:12px;padding:16px 28px;border:1px solid rgba(0,0,0,.08);border-radius:40px;background:var(--cream);transition:all var(--transition);cursor:default}
+.client-pill:hover{border-color:var(--gold);background:var(--gold-pale);transform:translateY(-2px)}
+.client-pill__icon{font-size:20px}
+.client-pill__label{font-size:14px;font-weight:500;color:var(--charcoal)}
+
+/* ===== CTA BAND ===== */
+.cta-band{padding:80px 0;background:linear-gradient(135deg,#111D28 0%,#1C2B3A 100%);position:relative;overflow:hidden}
+.cta-band::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(201,168,76,.08) 0%,transparent 70%)}
+.cta-band__inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:32px}
+.cta-band__heading{font-family:var(--font-display);font-size:clamp(28px,4vw,44px);font-weight:600;color:var(--white)}
+.cta-band__sub{font-size:16px;color:rgba(247,244,238,.65);max-width:480px;margin-top:-16px}
+
+/* ===== PAGE HERO ===== */
+.page-hero{padding:160px 0 80px;background:var(--navy-deep);position:relative;overflow:hidden}
+.page-hero__bg{position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 80% 50%,rgba(201,168,76,.07) 0%,transparent 70%),linear-gradient(135deg,#111D28 0%,#1C2B3A 100%)}
+.page-hero__content{position:relative;z-index:1}
+.page-hero__heading{font-family:var(--font-display);font-size:clamp(38px,6vw,64px);font-weight:600;color:var(--white);line-height:1.15;margin-bottom:24px;margin-top:12px}
+.page-hero__heading em{font-style:italic;color:var(--gold)}
+.page-hero__sub{font-size:17px;color:rgba(247,244,238,.65);line-height:1.75;max-width:580px}
+
+/* ===== ABOUT ===== */
+.about-story{padding:var(--section-py) 0;background:var(--white)}
+.about-story__inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.about-body{font-size:16px;color:var(--slate);line-height:1.8;margin-bottom:20px}
+.about-visual{display:flex;flex-direction:column;gap:24px;margin-top:40px}
+.about-visual__badge{display:flex;flex-direction:column;align-items:center;justify-content:center;width:160px;height:160px;border-radius:50%;border:2px solid var(--gold);background:var(--gold-pale);text-align:center}
+.about-visual__badge-num{font-family:var(--font-display);font-size:36px;font-weight:700;color:var(--navy)}
+.about-visual__badge-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--slate);margin-top:4px}
+.about-visual__quote{padding:28px 32px;border-left:3px solid var(--gold);background:var(--cream);border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+.about-visual__quote p{font-family:var(--font-display);font-size:20px;font-style:italic;color:var(--navy);margin-bottom:8px}
+.about-visual__quote span{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+.values-section{padding:var(--section-py) 0;background:var(--navy)}
+.values-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.value-card{padding:36px 28px;border:1px solid rgba(201,168,76,.15);border-radius:var(--radius-lg);background:rgba(255,255,255,.03);transition:all var(--transition)}
+.value-card:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.35);transform:translateY(-4px)}
+.value-card__num{font-family:var(--font-display);font-size:40px;font-weight:700;color:rgba(201,168,76,.2);display:block;margin-bottom:16px;line-height:1}
+.value-card__title{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--gold);margin-bottom:12px}
+.value-card__desc{font-size:14px;color:rgba(247,244,238,.65);line-height:1.7}
+.credentials-section{padding:var(--section-py) 0;background:var(--cream)}
+.credentials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.credential-card{padding:40px 32px;background:var(--white);border:1px solid rgba(0,0,0,.06);border-radius:var(--radius-lg);text-align:center;transition:all var(--transition)}
+.credential-card:hover{box-shadow:var(--shadow);transform:translateY(-4px)}
+.credential-card__icon{font-size:36px;margin-bottom:20px}
+.credential-card__title{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--navy);margin-bottom:12px}
+.credential-card__desc{font-size:14px;color:var(--slate);line-height:1.65}
+
+/* ===== SERVICES PAGE ===== */
+.service-detail-section{padding:80px 0;background:var(--white);border-bottom:1px solid rgba(0,0,0,.06)}
+.service-detail-section--alt{background:var(--cream)}
+.service-detail-inner{max-width:760px}
+.service-detail-text{display:flex;flex-direction:column}
+.service-detail-header{display:flex;align-items:flex-start;gap:24px;margin-bottom:28px}
+.service-detail-icon{font-size:44px;flex-shrink:0;margin-top:4px}
+.service-detail-title{font-family:var(--font-display);font-size:clamp(28px,4vw,40px);font-weight:600;color:var(--navy);margin-top:4px}
+.service-detail-body{font-size:16px;color:var(--slate);line-height:1.8;margin-bottom:28px;max-width:640px}
+.service-detail-points{display:flex;flex-direction:column;gap:12px}
+.service-detail-point{display:flex;align-items:flex-start;gap:12px;font-size:15px;color:var(--charcoal);line-height:1.5}
+.service-detail-point__mark{color:var(--gold);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ===== CONTACT ===== */
+.contact-section{padding:var(--section-py) 0;background:var(--cream)}
+.contact-section__inner{display:grid;grid-template-columns:1fr 1.4fr;gap:64px;align-items:start}
+.contact-info__heading{font-family:var(--font-display);font-size:32px;font-weight:600;color:var(--navy);margin-bottom:16px}
+.contact-info__body{font-size:15px;color:var(--slate);line-height:1.7;margin-bottom:36px}
+.contact-channels{display:flex;flex-direction:column;gap:20px;margin-bottom:36px}
+.contact-channel{display:flex;align-items:center;gap:16px;text-decoration:none;padding:18px 20px;background:var(--white);border:1px solid rgba(0,0,0,.07);border-radius:var(--radius-lg);transition:all var(--transition)}
+.contact-channel:hover{border-color:var(--gold);transform:translateX(4px);box-shadow:var(--shadow-sm)}
+.contact-channel__icon{font-size:22px;flex-shrink:0}
+.contact-channel__label{display:block;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.contact-channel__value{display:block;font-size:15px;font-weight:500;color:var(--navy)}
+.contact-hours{display:flex;flex-direction:column;gap:4px;margin-bottom:28px}
+.contact-hours__label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.contact-hours__value{font-size:14px;color:var(--charcoal)}
+.contact-disclaimer{font-size:12px;color:var(--muted);line-height:1.7;padding:16px;background:rgba(0,0,0,.03);border-radius:var(--radius);border-left:2px solid var(--gold)}
+.contact-form-col{background:var(--white);border-radius:var(--radius-lg);padding:48px 40px;box-shadow:var(--shadow-sm);border:1px solid rgba(0,0,0,.06)}
+.contact-form__heading{font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--navy);margin-bottom:32px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:20px}
+.form-label{font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--slate)}
+.form-input{width:100%;padding:12px 16px;font-family:var(--font-body);font-size:14px;color:var(--charcoal);background:var(--white);border:1px solid rgba(0,0,0,.15);border-radius:var(--radius);outline:none;transition:border-color var(--transition),box-shadow var(--transition);appearance:none}
+.form-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.12)}
+.form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%234A5D6E' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px;cursor:pointer}
+.form-textarea{resize:vertical;min-height:120px;line-height:1.6}
+.form-error{font-size:12px;color:var(--red);margin-top:2px}
+.form-consent{font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+.form-consent__link{color:var(--gold);text-decoration:underline;text-underline-offset:2px}
+.form-submit{width:100%;padding:14px;font-size:13px}
+.form-submit:disabled{opacity:.6;cursor:not-allowed}
+.contact-success{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px;gap:16px}
+.contact-success__icon{display:flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;background:var(--gold-pale);border:2px solid var(--gold);font-size:28px;color:var(--gold);font-weight:700}
+.contact-success__heading{font-family:var(--font-display);font-size:28px;color:var(--navy)}
+.contact-success__body{font-size:15px;color:var(--slate);line-height:1.7;max-width:360px;margin-bottom:8px}
+
+/* ===== TERMS ===== */
+.terms-body{padding:var(--section-py) 0;background:var(--white)}
+.terms-inner{max-width:760px}
+.terms-updated{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.terms-intro{font-size:16px;color:var(--slate);line-height:1.8;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid rgba(0,0,0,.08)}
+.terms-section{margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid rgba(0,0,0,.06)}
+.terms-section:last-child{border-bottom:none}
+.terms-section__title{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--navy);margin-bottom:12px}
+.terms-section__body{font-size:15px;color:var(--slate);line-height:1.8}
+
+/* ===== FOOTER ===== */
+.footer{background:var(--navy-deep);color:rgba(247,244,238,.7)}
+.footer__inner{display:grid;grid-template-columns:1.8fr 1fr 1fr 1.2fr;gap:48px;padding:72px 24px 48px}
+.footer__logo{display:flex;flex-direction:column;text-decoration:none;margin-bottom:16px;cursor:pointer}
+.footer__logo-text{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--white)}
+.footer__logo-tag{font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:2px}
+.footer__tagline{font-size:13px;color:rgba(247,244,238,.5);line-height:1.7;margin-bottom:24px;max-width:280px}
+.footer__social{display:flex;gap:12px}
+.footer__social-link{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid rgba(201,168,76,.25);border-radius:50%;color:rgba(247,244,238,.6);text-decoration:none;transition:all var(--transition)}
+.footer__social-link:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.footer__nav-heading{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.footer__nav-list{display:flex;flex-direction:column;gap:10px}
+.footer__nav-link{font-size:13px;color:rgba(247,244,238,.55);text-decoration:none;transition:color var(--transition);cursor:pointer;background:none;border:none;font-family:inherit;text-align:left;padding:0}
+.footer__nav-link:hover{color:var(--white)}
+.footer__contact-list{display:flex;flex-direction:column;gap:12px}
+.footer__contact-item{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(247,244,238,.55);text-decoration:none;transition:color var(--transition);word-break:break-all}
+.footer__contact-item:hover{color:var(--white)}
+.footer__contact-icon{font-size:14px;flex-shrink:0}
+.footer__bottom{border-top:1px solid rgba(201,168,76,.1);padding-top:24px;padding-bottom:32px}
+.footer__bottom-inner{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.footer__copy{font-size:12px;color:rgba(247,244,238,.35)}
+.footer__bottom-links{display:flex;gap:24px}
+.footer__bottom-link{font-size:12px;color:rgba(247,244,238,.4);text-decoration:none;transition:color var(--transition);cursor:pointer;background:none;border:none;font-family:inherit}
+.footer__bottom-link:hover{color:var(--gold)}
+.footer__disclaimer{font-size:11px;color:rgba(247,244,238,.25);line-height:1.7;max-width:760px}
+
+/* ===== FADE IN ===== */
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.fade-in--visible{opacity:1;transform:translateY(0)}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;top:20px;right:20px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;background:#1C2B3A;color:#F7F4EE;border:1px solid var(--gold);border-radius:4px;font-size:14px;font-family:var(--font-body);box-shadow:var(--shadow-lg);animation:toastIn .3s ease;max-width:360px}
+.toast--success{border-color:var(--gold)}
+.toast--error{border-color:var(--red)}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .services-grid{grid-template-columns:repeat(2,1fr)}
+  .why-section__inner{gap:48px}
+  .values-grid{grid-template-columns:repeat(2,1fr)}
+  .footer__inner{grid-template-columns:1fr 1fr;row-gap:40px}
+}
+@media(max-width:960px){
+  .contact-section__inner{grid-template-columns:1fr;gap:40px}
+  .form-row{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  :root{--section-py:64px}
+  .container{padding:0 16px}
+  .hero__content{padding-top:40px}
+  .services-grid{grid-template-columns:1fr}
+  .why-section__inner{grid-template-columns:1fr}
+  .why-visual{height:auto}
+  .why-visual__card--offset{margin-left:0}
+  .why-visual__bg-text{display:none}
+  .about-story__inner{grid-template-columns:1fr;gap:40px}
+  .credentials-grid{grid-template-columns:1fr}
+  .values-grid{grid-template-columns:1fr}
+  .service-detail-header{flex-direction:column;gap:12px}
+  .service-detail-icon{font-size:36px}
+  .footer__inner{grid-template-columns:1fr;gap:36px;padding:48px 16px 32px}
+  .footer__bottom-inner{flex-direction:column;align-items:flex-start;gap:8px}
+}
+@media(max-width:600px){
+  .footer__inner{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .hero__actions{flex-direction:column}
+  .contact-form-col{padding:32px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar" id="navbar">
+  <div class="navbar__inner container">
+    <div class="navbar__logo" onclick="navigate('home')">
+      <img class="navbar__logo-img" src="data:image/png;base64,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" alt="Rudra Capital Logo" />
+      <div class="navbar__logo-text-group">
+        <span class="navbar__logo-text">Rudra Capital</span>
+      </div>
+    </div>
+    <nav class="navbar__nav" aria-label="Main navigation">
+      <button class="navbar__link navbar__link--active" id="nav-home" onclick="navigate('home')">Home</button>
+      <button class="navbar__link" id="nav-about" onclick="navigate('about')">About</button>
+      <button class="navbar__link" id="nav-services" onclick="navigate('services')">Services</button>
+      <button class="navbar__link" id="nav-contact" onclick="navigate('contact')">Contact</button>
+      <button class="navbar__cta" onclick="navigate('contact')">Get in Touch</button>
+    </nav>
+    <button class="navbar__burger" id="burger" onclick="toggleMenu()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="navbar__mobile" id="mobile-menu">
+    <button class="navbar__mobile-link" onclick="navigate('home')">Home</button>
+    <button class="navbar__mobile-link" onclick="navigate('about')">About</button>
+    <button class="navbar__mobile-link" onclick="navigate('services')">Services</button>
+    <button class="navbar__mobile-link" onclick="navigate('contact')">Contact</button>
+    <button class="navbar__mobile-cta" onclick="navigate('contact')">Get in Touch</button>
+  </div>
+</header>
+
+<!-- ============ HOME PAGE ============ -->
+<div class="page page--active" id="page-home">
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true">
+      <div class="hero__gradient"></div>
+      <div class="hero__grid"></div>
+    </div>
+    <div class="container hero__content">
+      <div class="hero__text">
+        <span class="section-label">Rudra Capital</span>
+        <h1 class="hero__heading">Your Wealth,<br /><em class="hero__heading-em">Purposefully Grown.</em></h1>
+        <p class="hero__sub">Independent guidance rooted in trust — helping individuals and families build lasting financial security through mutual funds, SIP, retirement planning, and beyond.</p>
+        <div class="hero__actions">
+          <button class="btn btn--primary" onclick="navigate('contact')">Start Your Journey</button>
+          <button class="btn btn--ghost" onclick="navigate('services')">Explore Services</button>
+        </div>
+      </div>
+    </div>
+    <div class="hero__scroll-hint" aria-hidden="true"><span></span></div>
+  </section>
+
+  <section class="services-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-label">What We Offer</span>
+        <span class="gold-line"></span>
+        <h2 class="section-title">Comprehensive Financial Services</h2>
+        <p class="section-desc">Every financial decision shapes your future. We provide clear, unbiased guidance across a full spectrum of investment and protection products.</p>
+      </div>
+      <div class="services-grid">
+        <a class="service-card fade-in" onclick="navigate('services')" style="cursor:pointer;transition-delay:0ms">
+          <div class="service-card__icon">📈</div>
+          <h3 class="service-card__title">Mutual Funds</h3>
+          <p class="service-card__desc">Professionally managed, diversified portfolios tailored to your risk profile and financial goals.</p>
+          <span class="service-card__arrow">→</span>
+        </a>
+        <a class="service-card fade-in" onclick="navigate('services')" style="cursor:pointer;transition-delay:80ms">
+          <div class="service-card__icon">🔄</div>
+          <h3 class="service-card__title">Systematic Investment Plan</h3>
+          <p class="service-card__desc">Build wealth steadily through disciplined, periodic investments — harnessing the power of compounding.</p>
+          <span class="service-card__arrow">→</span>
+        </a>
+        <a class="service-card fade-in" onclick="navigate('services')" style="cursor:pointer;transition-delay:160ms">
+          <div class="service-card__icon">🎓</div>
+          <h3 class="service-card__title">Child Education Planning</h3>
+          <p class="service-card__desc">Secure your child's academic future with targeted investment strategies that keep pace with rising costs.</p>
+          <span class="service-card__arrow">→</span>
+        </a>
+        <a class="service-card fade-in" onclick="navigate('services')" style="cursor:pointer;transition-delay:240ms">
+          <div class="service-card__icon">🌅</div>
+          <h3 class="service-card__title">Retirement Planning</h3>
+          <p class="service-card__desc">Design a retirement corpus that sustains your lifestyle — with no compromise on comfort or independence.</p>
+          <span class="service-card__arrow">→</span>
+        </a>
+        <a class="service-card fade-in" onclick="navigate('services')" style="cursor:pointer;transition-delay:320ms">
+          <div class="service-card__icon">🏛️</div>
+          <h3 class="service-card__title">Wealth Creation</h3>
+          <p class="service-card__desc">Strategic asset allocation across equity, debt, and alternatives to grow and preserve your wealth.</p>
+          <span class="service-card__arrow">→</span>
+        </a>
+        <a class="service-card fade-in" onclick="navigate('services')" style="cursor:pointer;transition-delay:400ms">
+          <div class="service-card__icon">🛡️</div>
+          <h3 class="service-card__title">Insurance Advisory</h3>
+          <p class="service-card__desc">Comprehensive life and health coverage — protecting everything you've worked hard to build.</p>
+          <span class="service-card__arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="why-section">
+    <div class="container why-section__inner">
+      <div class="fade-in">
+        <span class="section-label">Why Choose Us</span>
+        <span class="gold-line"></span>
+        <h2 class="section-title section-title--light">Built on Integrity</h2>
+        <p class="why-section__body">We are not a distributor chasing commissions. Rudra Capital operates on a client-first philosophy — recommending only what serves your goals, explained in plain language you can trust.</p>
+        <ul class="why-list">
+          <li class="why-list__item"><span class="why-list__mark">✓</span> AMFI registered Mutual Fund Distributor</li>
+          <li class="why-list__item"><span class="why-list__mark">✓</span> Personalised risk profiling and goal mapping</li>
+          <li class="why-list__item"><span class="why-list__mark">✓</span> Regular portfolio reviews and rebalancing</li>
+          <li class="why-list__item"><span class="why-list__mark">✓</span> End-to-end support — from onboarding to redemption</li>
+          <li class="why-list__item"><span class="why-list__mark">✓</span> Direct access to your advisor — no call centres</li>
+        </ul>
+        <button class="btn btn--primary" style="margin-top:32px" onclick="navigate('about')">About Rudra Capital</button>
+      </div>
+      <div class="fade-in" style="transition-delay:150ms">
+        <div class="why-visual">
+          <div class="why-visual__card"><div class="why-visual__card-label">Client-First Approach</div><div class="why-visual__card-value">Always</div></div>
+          <div class="why-visual__card why-visual__card--offset"><div class="why-visual__card-label">Portfolio Reviews</div><div class="why-visual__card-value">Annually</div></div>
+          <div class="why-visual__card"><div class="why-visual__card-label">Advisor Access</div><div class="why-visual__card-value">Direct</div></div>
+          <div class="why-visual__bg-text" aria-hidden="true">RC</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="who-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-label">Who We Serve</span>
+        <span class="gold-line"></span>
+        <h2 class="section-title">Built for Every Stage of Life</h2>
+      </div>
+      <div class="clients-row">
+        <div class="client-pill fade-in"><span class="client-pill__icon">👔</span><span class="client-pill__label">Salaried Professionals</span></div>
+        <div class="client-pill fade-in" style="transition-delay:70ms"><span class="client-pill__icon">🏢</span><span class="client-pill__label">Business Owners</span></div>
+        <div class="client-pill fade-in" style="transition-delay:140ms"><span class="client-pill__icon">⚕️</span><span class="client-pill__label">Doctors & Professionals</span></div>
+        <div class="client-pill fade-in" style="transition-delay:210ms"><span class="client-pill__icon">💎</span><span class="client-pill__label">HNI Clients</span></div>
+        <div class="client-pill fade-in" style="transition-delay:280ms"><span class="client-pill__icon">✈️</span><span class="client-pill__label">NRI Investors</span></div>
+        <div class="client-pill fade-in" style="transition-delay:350ms"><span class="client-pill__icon">🌿</span><span class="client-pill__label">Retirees</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ABOUT PAGE ============ -->
+<div class="page" id="page-about">
+  <section class="page-hero">
+    <div class="page-hero__bg" aria-hidden="true"></div>
+    <div class="container page-hero__content">
+      <div class="fade-in">
+        <span class="section-label">About Us</span>
+        <h1 class="page-hero__heading">The People Behind<br /><em>Your Financial Future</em></h1>
+        <p class="page-hero__sub">Rudra Capital is dedicated to helping individuals, families, and business owners build lasting wealth with clarity and confidence.</p>
+      </div>
+    </div>
+  </section>
+  <section class="about-story">
+    <div class="container about-story__inner">
+      <div class="fade-in">
+        <span class="section-label">Our Story</span>
+        <span class="gold-line"></span>
+        <h2 class="section-title">Founded on a Simple Belief</h2>
+        <p class="about-body">Rudra Capital was founded with one conviction: every individual deserves expert financial guidance — not just those with large portfolios or institutional backing.</p>
+        <p class="about-body">We began as a boutique financial practice focused on helping salaried professionals and families navigate the complexity of mutual funds and long-term financial planning. Over the years, that circle of trust has expanded — but our principles have not changed.</p>
+        <p class="about-body">Today, Rudra Capital is a registered Mutual Fund Distributor (AMFI) with a growing client base across Maharashtra, offering personalised services across mutual funds, SIP, retirement planning, child education planning, and insurance.</p>
+      </div>
+      <div class="fade-in" style="transition-delay:120ms">
+        <div class="about-visual">
+          <div class="about-visual__quote">
+            <p>"Financial clarity shouldn't be a privilege."</p>
+            <span>— Rudra Capital</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="values-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-label">Our Values</span>
+        <span class="gold-line"></span>
+        <h2 class="section-title section-title--light">What We Stand For</h2>
+      </div>
+      <div class="values-grid">
+        <div class="value-card fade-in"><span class="value-card__num">01</span><h3 class="value-card__title">Transparency</h3></div>
+        <div class="value-card fade-in" style="transition-delay:80ms"><span class="value-card__num">02</span><h3 class="value-card__title">Independence</h3></div>
+        <div class="value-card fade-in" style="transition-delay:160ms"><span class="value-card__num">03</span><h3 class="value-card__title">Long-Term Thinking</h3></div>
+        <div class="value-card fade-in" style="transition-delay:240ms"><span class="value-card__num">04</span><h3 class="value-card__title">Personal Accountability</h3></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ SERVICES PAGE ============ -->
+<div class="page" id="page-services">
+  <section class="page-hero">
+    <div class="page-hero__bg" aria-hidden="true"></div>
+    <div class="container page-hero__content">
+      <div class="fade-in">
+        <span class="section-label">Services</span>
+        <h1 class="page-hero__heading">Financial Services<br /><em>That Work for You</em></h1>
+        <p class="page-hero__sub">Each service is delivered with the same standard: clear explanation, unbiased guidance, and a plan built around your specific situation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="service-detail-section" id="mutual-funds">
+    <div class="container service-detail-inner"><div class="service-detail-text fade-in">
+      <div class="service-detail-header"><span class="service-detail-icon">📈</span><div><span class="section-label">Professionally managed diversification</span><h2 class="service-detail-title">Mutual Funds</h2></div></div>
+      <p class="service-detail-body">Mutual funds pool capital from multiple investors to build diversified portfolios managed by professional fund managers. We help you identify funds that align precisely with your risk tolerance, time horizon, and financial goals.</p>
+      <ul class="service-detail-points">
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Risk-profiling and fund selection</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Equity, debt, hybrid, and ELSS options</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Diversification across sectors and asset classes</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Transparent, regulated investment vehicles</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Easy online onboarding and portfolio tracking</li>
+      </ul>
+    </div></div>
+  </section>
+
+  <section class="service-detail-section service-detail-section--alt" id="sip">
+    <div class="container service-detail-inner"><div class="service-detail-text fade-in">
+      <div class="service-detail-header"><span class="service-detail-icon">🔄</span><div><span class="section-label">Discipline that compounds into wealth</span><h2 class="service-detail-title">Systematic Investment Plan (SIP)</h2></div></div>
+      <p class="service-detail-body">SIP is the most effective way to build wealth over time — investing fixed amounts at regular intervals to remove market-timing anxiety and harness the full power of compounding. Even modest monthly amounts become significant corpus over 10–15 years.</p>
+      <ul class="service-detail-points">
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Start with as little as ₹500/month</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Rupee cost averaging reduces risk</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Automated, stress-free investing</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Flexible — pause, modify, or stop anytime</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Goal-linked SIP planning</li>
+      </ul>
+    </div></div>
+  </section>
+
+  <section class="service-detail-section" id="child-education">
+    <div class="container service-detail-inner"><div class="service-detail-text fade-in">
+      <div class="service-detail-header"><span class="service-detail-icon">🎓</span><div><span class="section-label">Securing tomorrow's opportunities today</span><h2 class="service-detail-title">Child Education Planning</h2></div></div>
+      <p class="service-detail-body">Education costs are rising at 10–12% annually. Without a dedicated plan, this can become a serious financial burden. We create goal-specific investment strategies that account for your child's age, the target institution, and realistic cost projections.</p>
+      <ul class="service-detail-points">
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Accurate future cost estimation</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Age-appropriate investment strategy</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Milestone-based review and adjustment</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Protection cover for the earning parent</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Tax-efficient vehicle selection</li>
+      </ul>
+    </div></div>
+  </section>
+
+  <section class="service-detail-section service-detail-section--alt" id="retirement">
+    <div class="container service-detail-inner"><div class="service-detail-text fade-in">
+      <div class="service-detail-header"><span class="service-detail-icon">🌅</span><div><span class="section-label">Financial independence on your terms</span><h2 class="service-detail-title">Retirement Planning</h2></div></div>
+      <p class="service-detail-body">Retirement is the longest financial goal and the most unforgiving if underplanned. We help you determine your retirement corpus, assess your current trajectory, and build a structured plan that funds a comfortable, independent retirement.</p>
+      <ul class="service-detail-points">
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Retirement corpus calculation</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Inflation-adjusted income projection</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>National Pension Scheme (NPS) advisory</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Systematic Withdrawal Plan (SWP) setup</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Estate and succession considerations</li>
+      </ul>
+    </div></div>
+  </section>
+
+  <section class="service-detail-section" id="wealth-creation">
+    <div class="container service-detail-inner"><div class="service-detail-text fade-in">
+      <div class="service-detail-header"><span class="service-detail-icon">🏛️</span><div><span class="section-label">Grow what you've built</span><h2 class="service-detail-title">Wealth Creation</h2></div></div>
+      <p class="service-detail-body">Wealth creation is about deploying capital intelligently across asset classes to achieve returns that outpace inflation and build real net worth. We create customised portfolios that balance growth potential with your capacity and tolerance for risk.</p>
+      <ul class="service-detail-points">
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Comprehensive financial goal mapping</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Asset allocation across equity, debt, gold</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Regular portfolio rebalancing</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Tax-efficiency across investment types</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Long-horizon investing strategy</li>
+      </ul>
+    </div></div>
+  </section>
+
+  <section class="service-detail-section service-detail-section--alt" id="insurance">
+    <div class="container service-detail-inner"><div class="service-detail-text fade-in">
+      <div class="service-detail-header"><span class="service-detail-icon">🛡️</span><div><span class="section-label">Protection as a foundation, not an afterthought</span><h2 class="service-detail-title">Insurance Advisory</h2></div></div>
+      <p class="service-detail-body">Adequate insurance is the bedrock of any financial plan. We provide unbiased advisory on life and health insurance — ensuring your family and assets are protected without over-insuring or under-insuring at any life stage.</p>
+      <ul class="service-detail-points">
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Term life insurance for maximum coverage</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Health insurance for self and family</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Critical illness and disability coverage</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>Annual cover review as life changes</li>
+        <li class="service-detail-point"><span class="service-detail-point__mark">—</span>No push-selling — only what you need</li>
+      </ul>
+    </div></div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container cta-band__inner">
+      <div class="fade-in"><h2 class="cta-band__heading">Not Sure Where to Start?</h2></div>
+      <div class="fade-in" style="transition-delay:100ms"><button class="btn btn--gold" onclick="navigate('contact')">Talk With Us</button></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ CONTACT PAGE ============ -->
+<div class="page" id="page-contact">
+  <section class="page-hero">
+    <div class="page-hero__bg" aria-hidden="true"></div>
+    <div class="container page-hero__content">
+      <div class="fade-in">
+        <span class="section-label">Get in Touch</span>
+        <h1 class="page-hero__heading">Let's Start a<br /><em>Conversation</em></h1>
+        <p class="page-hero__sub">Whether you have a specific goal in mind or simply want to understand your options, we're here to listen and guide — with no obligation.</p>
+      </div>
+    </div>
+  </section>
+  <section class="contact-section">
+    <div class="container contact-section__inner">
+      <div class="contact-info fade-in">
+        <h2 class="contact-info__heading">Reach Us Directly</h2>
+        <p class="contact-info__body">We typically respond within one business day. For urgent matters, call or WhatsApp us directly.</p>
+        <div class="contact-channels">
+          <a href="tel:+918208356308" class="contact-channel">
+            <span class="contact-channel__icon">📞</span>
+            <div><span class="contact-channel__label">Phone / WhatsApp</span><span class="contact-channel__value">+91 82083 56308</span></div>
+          </a>
+          <a href="mailto:rudracapital.in@gmail.com" class="contact-channel">
+            <span class="contact-channel__icon">✉️</span>
+            <div><span class="contact-channel__label">Email</span><span class="contact-channel__value">rudracapital.in@gmail.com</span></div>
+          </a>
+          <a href="https://www.instagram.com/rudracapital.invest" target="_blank" rel="noopener noreferrer" class="contact-channel">
+            <span class="contact-channel__icon">📷</span>
+            <div><span class="contact-channel__label">Instagram</span><span class="contact-channel__value">@rudracapital.invest</span></div>
+          </a>
+        </div>
+        <div class="contact-hours">
+          <span class="contact-hours__label">Business Hours</span>
+          <span class="contact-hours__value">Monday – Saturday, 9:00 AM – 7:00 PM IST</span>
+        </div>
+        <div class="contact-disclaimer">
+          <strong>Disclaimer:</strong> Mutual Fund investments are subject to market risks, read all scheme related documents carefully. Past performance is not indicative of future returns.
+        </div>
+      </div>
+      <div class="contact-form-col fade-in" style="transition-delay:100ms" id="form-wrapper">
+        <h3 class="contact-form__heading">Send an Enquiry</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input class="form-input" type="text" id="f-name" placeholder="Your full name" />
+            <span class="form-error" id="e-name" style="display:none">Name is required</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number *</label>
+            <input class="form-input" type="tel" id="f-phone" placeholder="+91 XXXXX XXXXX" />
+            <span class="form-error" id="e-phone" style="display:none">Enter a valid phone number</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="f-email" placeholder="your@email.com (optional)" />
+          <span class="form-error" id="e-email" style="display:none">Enter a valid email address</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Area of Interest *</label>
+          <select class="form-input form-select" id="f-subject">
+            <option value="">Select a topic</option>
+            <option>Mutual Fund Advisory</option>
+            <option>SIP Planning</option>
+            <option>Retirement Planning</option>
+            <option>Child Education Planning</option>
+            <option>Wealth Creation</option>
+            <option>Insurance Advisory</option>
+            <option>General Enquiry</option>
+          </select>
+          <span class="form-error" id="e-subject" style="display:none">Please select a subject</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message *</label>
+          <textarea class="form-input form-textarea" id="f-message" placeholder="Tell us about your financial goals or questions..." rows="5"></textarea>
+          <span class="form-error" id="e-message" style="display:none">Please provide more detail (at least 20 characters)</span>
+        </div>
+        <p class="form-consent">By submitting, you agree to our <button onclick="navigate('terms')" class="form-consent__link" style="background:none;border:none;cursor:pointer;font-size:inherit;padding:0">Terms & Conditions</button> and consent to being contacted regarding your enquiry.</p>
+        <button class="btn btn--primary form-submit" id="submit-btn" onclick="submitForm()">Send Enquiry</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ TERMS PAGE ============ -->
+<div class="page" id="page-terms">
+  <section class="page-hero">
+    <div class="page-hero__bg" aria-hidden="true"></div>
+    <div class="container page-hero__content">
+      <div class="fade-in">
+        <span class="section-label">Legal</span>
+        <h1 class="page-hero__heading">Terms &amp;<br /><em>Conditions</em></h1>
+        <p class="page-hero__sub">Please read these terms carefully. By using our website and services, you agree to the following.</p>
+      </div>
+    </div>
+  </section>
+  <section class="terms-body">
+    <div class="container terms-inner">
+      <p class="terms-updated">Last updated: June 2026</p>
+      <p class="terms-intro">These Terms and Conditions govern your access to and use of the Rudra Capital website and services. References to "Rudra Capital," "we," "us," or "our" refer to Rudra Capital, a registered Mutual Fund Distributor operating in Maharashtra, India.</p>
+      <div class="terms-section"><h2 class="terms-section__title">1. Acceptance of Terms</h2><p class="terms-section__body">By accessing or using the Rudra Capital website and its associated services, you confirm that you have read, understood, and agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, please discontinue use of the website immediately.</p></div>
+      <div class="terms-section"><h2 class="terms-section__title">2. Nature of Services</h2><p class="terms-section__body">Rudra Capital is a registered Mutual Fund Distributor (AMFI Registration No: ARN-330229) and provides financial services including but not limited to: mutual fund distribution, SIP planning, retirement planning, child education planning, wealth creation strategies, and insurance advisory. Our services are intended to provide general financial guidance and are not a substitute for personalised investment advice from a SEBI-registered investment professional.</p></div>
+      <div class="terms-section"><h2 class="terms-section__title">3. Investment Risk Disclaimer</h2><p class="terms-section__body">Mutual Fund investments are subject to market risks. Past performance of any fund or investment does not guarantee future returns. The NAV of schemes can fluctuate based on various market conditions, and investors may receive less than the amount invested. We strongly recommend that clients read all scheme-related documents carefully before investing.</p></div>
+      <div class="terms-section"><h2 class="terms-section__title">4. No Guarantee of Returns</h2><p class="terms-section__body">Rudra Capital does not guarantee any specific level of return, profit, or income from any investment product or strategy discussed or recommended. Any projections, illustrations, or expected returns shared are for informational and illustrative purposes only and should not be construed as promises or assurances.</p></div>
+      <div class="terms-section"><h2 class="terms-section__title">5. Privacy and Data Collection</h2><p class="terms-section__body">Information you submit through our contact form is collected solely for the purpose of responding to your enquiry and providing financial advisory services. We do not sell, rent, or share your personal information with third parties for marketing purposes.</p></div>
+      <div class="terms-section"><h2 class="terms-section__title">6. Communication Consent</h2><p class="terms-section__body">By submitting an enquiry through our website or contacting us via phone, email, or social media, you consent to being contacted by Rudra Capital via phone call, WhatsApp, email, or SMS for the purpose of addressing your financial queries and providing service updates.</p></div>
+      <div class="terms-section"><h2 class="terms-section__title">7. Intellectual Property</h2><p class="terms-section__body">All content published on this website — including text, graphics, brand identity, and design — is the intellectual property of Rudra Capital. Reproduction, distribution, or modification of any content without prior written consent is strictly prohibited.</p></div>
+      <div class="terms-section"><h2 class="terms-section__title">8. Regulatory Compliance</h2><p class="terms-section__body">Rudra Capital operates in compliance with the regulations set forth by SEBI, AMFI, and IRDAI where applicable. AMFI Registration No: ARN-330229. Regulatory information and compliance details are available on request.</p></div>
+      <div class="terms-section"><h2 class="terms-section__title">9. Governing Law & Jurisdiction</h2><p class="terms-section__body">These Terms and Conditions are governed by the laws of India. Any disputes arising from or in connection with these terms shall be subject to the exclusive jurisdiction of the courts of Maharashtra, India.</p></div>
+      <div class="terms-section"><h2 class="terms-section__title">10. Contact</h2><p class="terms-section__body">For questions or concerns, please contact us at: rudracapital.in@gmail.com or call +91 82083 56308.</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <div class="footer__logo" onclick="navigate('home')">
+        <span class="footer__logo-text">Rudra Capital</span>
+      </div>
+      <p class="footer__tagline" style="font-size:11px;line-height:1.8;color:rgba(247,244,238,0.45);max-width:300px;">Mutual Fund investments are subject to market risks, read all scheme related documents carefully.<br/>AMFI Registered — ARN: 330229.</p>
+      <div class="footer__social">
+        <a href="https://www.instagram.com/rudracapital.invest" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://wa.me/918208356308" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="WhatsApp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer__nav">
+      <h4 class="footer__nav-heading">Navigate</h4>
+      <ul class="footer__nav-list">
+        <li><button class="footer__nav-link" onclick="navigate('home')">Home</button></li>
+        <li><button class="footer__nav-link" onclick="navigate('about')">About</button></li>
+        <li><button class="footer__nav-link" onclick="navigate('services')">Services</button></li>
+        <li><button class="footer__nav-link" onclick="navigate('contact')">Contact</button></li>
+      </ul>
+    </div>
+    <div class="footer__nav">
+      <h4 class="footer__nav-heading">Services</h4>
+      <ul class="footer__nav-list">
+        <li><button class="footer__nav-link" onclick="navigate('services')">Mutual Funds</button></li>
+        <li><button class="footer__nav-link" onclick="navigate('services')">SIP</button></li>
+        <li><button class="footer__nav-link" onclick="navigate('services')">Child Education</button></li>
+        <li><button class="footer__nav-link" onclick="navigate('services')">Retirement Planning</button></li>
+        <li><button class="footer__nav-link" onclick="navigate('services')">Wealth Creation</button></li>
+        <li><button class="footer__nav-link" onclick="navigate('services')">Insurance Advisory</button></li>
+      </ul>
+    </div>
+    <div class="footer__contact">
+      <h4 class="footer__nav-heading">Contact</h4>
+      <ul class="footer__contact-list">
+        <li><a href="tel:+918208356308" class="footer__contact-item"><span class="footer__contact-icon">📞</span>+91 82083 56308</a></li>
+        <li><a href="mailto:rudracapital.in@gmail.com" class="footer__contact-item"><span class="footer__contact-icon">✉️</span>rudracapital.in@gmail.com</a></li>
+        <li><a href="https://www.instagram.com/rudracapital.invest" target="_blank" rel="noopener noreferrer" class="footer__contact-item"><span class="footer__contact-icon">📷</span>@rudracapital.invest</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <div class="container footer__bottom-inner">
+      <p class="footer__copy">© <span id="footer-year"></span> Rudra Capital. All rights reserved.</p>
+      <div class="footer__bottom-links">
+        <button class="footer__bottom-link" onclick="navigate('terms')">Terms & Conditions</button>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+// ===== NAVIGATION =====
+const pages = ['home','about','services','contact','terms'];
+let currentPage = 'home';
+
+function navigate(page) {
+  // hide all pages
+  pages.forEach(p => {
+    const el = document.getElementById('page-' + p);
+    if(el) { el.classList.remove('page--active'); }
+  });
+  // show target
+  const target = document.getElementById('page-' + page);
+  if(target) target.classList.add('page--active');
+  currentPage = page;
+
+  // update nav active states
+  pages.forEach(p => {
+    const btn = document.getElementById('nav-' + p);
+    if(btn) btn.classList.toggle('navbar__link--active', p === page);
+  });
+
+  // close mobile menu
+  document.getElementById('mobile-menu').classList.remove('navbar__mobile--open');
+  document.getElementById('burger').classList.remove('navbar__burger--open');
+
+  // scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // re-trigger fade-ins
+  setTimeout(triggerFadeIns, 100);
+}
+
+// ===== NAVBAR SCROLL =====
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('navbar--scrolled', window.scrollY > 40);
+});
+
+// ===== MOBILE MENU =====
+function toggleMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const burger = document.getElementById('burger');
+  menu.classList.toggle('navbar__mobile--open');
+  burger.classList.toggle('navbar__burger--open');
+}
+
+// ===== FADE IN ON SCROLL =====
+function triggerFadeIns() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) { e.target.classList.add('fade-in--visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-in:not(.fade-in--visible)').forEach(el => observer.observe(el));
+}
+triggerFadeIns();
+
+// ===== FOOTER YEAR =====
+document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+// ===== CONTACT FORM =====
+function submitForm() {
+  let valid = true;
+  const name    = document.getElementById('f-name').value.trim();
+  const phone   = document.getElementById('f-phone').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const subject = document.getElementById('f-subject').value;
+  const message = document.getElementById('f-message').value.trim();
+
+  const show = (id, v) => { document.getElementById(id).style.display = v ? 'block' : 'none'; };
+
+  if(!name || name.length < 2)                              { show('e-name',    true);  valid = false; } else { show('e-name',    false); }
+  if(!phone || !/^[\+\d\s\-\(\)]{7,20}$/.test(phone))      { show('e-phone',   true);  valid = false; } else { show('e-phone',   false); }
+  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))   { show('e-email',   true);  valid = false; } else { show('e-email',   false); }
+  if(!subject)                                              { show('e-subject', true);  valid = false; } else { show('e-subject', false); }
+  if(!message || message.length < 20)                       { show('e-message', true);  valid = false; } else { show('e-message', false); }
+
+  if(!valid) return;
+
+  // Disable button while sending
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  const templateParams = {
+    from_name   : name,
+    phone       : phone,
+    from_email  : email || 'Not provided',
+    subject     : subject,
+    message     : message,
+    reply_to    : email || 'noreply@rudracapital.in',
+  };
+
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+    .then(() => {
+      document.getElementById('form-wrapper').innerHTML = `
+        <div class="contact-success">
+          <span class="contact-success__icon">✓</span>
+          <h3 class="contact-success__heading">Message Received</h3>
+          <p class="contact-success__body">Thank you for reaching out. We'll review your enquiry and get back to you within one business day.</p>
+          <button class="btn btn--primary" onclick="resetForm()">Send Another Message</button>
+        </div>`;
+      showToast('Message sent! We\'ll be in touch shortly.', 'success');
+    })
+    .catch((err) => {
+      console.error('EmailJS error:', err);
+      btn.disabled = false;
+      btn.textContent = 'Send Enquiry';
+      showToast('Failed to send. Please try again or call us directly.', 'error');
+    });
+}
+
+function resetForm() {
+  document.getElementById('form-wrapper').innerHTML = `
+    <h3 class="contact-form__heading">Send an Enquiry</h3>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" type="text" id="f-name" placeholder="Your full name" /><span class="form-error" id="e-name" style="display:none">Name is required</span></div>
+      <div class="form-group"><label class="form-label">Phone Number *</label><input class="form-input" type="tel" id="f-phone" placeholder="+91 XXXXX XXXXX" /><span class="form-error" id="e-phone" style="display:none">Enter a valid phone number</span></div>
+    </div>
+    <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="f-email" placeholder="your@email.com (optional)" /><span class="form-error" id="e-email" style="display:none">Enter a valid email address</span></div>
+    <div class="form-group"><label class="form-label">Area of Interest *</label><select class="form-input form-select" id="f-subject"><option value="">Select a topic</option><option>Mutual Fund Advisory</option><option>SIP Planning</option><option>Retirement Planning</option><option>Child Education Planning</option><option>Wealth Creation</option><option>Insurance Advisory</option><option>General Enquiry</option></select><span class="form-error" id="e-subject" style="display:none">Please select a subject</span></div>
+    <div class="form-group"><label class="form-label">Message *</label><textarea class="form-input form-textarea" id="f-message" placeholder="Tell us about your financial goals or questions..." rows="5"></textarea><span class="form-error" id="e-message" style="display:none">Please provide more detail (at least 20 characters)</span></div>
+    <p class="form-consent">By submitting, you agree to our <button onclick="navigate('terms')" class="form-consent__link" style="background:none;border:none;cursor:pointer;font-size:inherit;padding:0">Terms & Conditions</button> and consent to being contacted regarding your enquiry.</p>
+    <button class="btn btn--primary form-submit" id="submit-btn" onclick="submitForm()">Send Enquiry</button>`;
+}
+
+// ===== TOAST =====
+function showToast(msg, type='success') {
+  const t = document.createElement('div');
+  t.className = `toast toast--${type}`;
+  t.textContent = (type === 'success' ? '✓  ' : '✕  ') + msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.transition='opacity .3s'; t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 3500);
+}
+</script>
+</body>
+</html>
